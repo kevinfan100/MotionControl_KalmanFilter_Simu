@@ -17,7 +17,7 @@
 - .claude/sessions/master.md（補充完整記錄）
 
 ### Commit
-待執行
+`5ede82d - Fix: Exclude large thermal data files from Git tracking`
 
 ### 說明
 發現兩個 327MB 的熱力資料檔案無法推送到 GitHub（限制 100MB）。將它們從 Git 追蹤中移除但保留在本地，確保模擬程式仍可正常運作。
