@@ -1,0 +1,48 @@
+# Visual Studio build artifacts
+Debug/
+Release/
+*.exe
+*.pdb
+*.ilk
+*.obj
+*.idb
+*.tlog
+*.lastbuildstate
+
+# Visual Studio user files
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.db
+*.opendb
+*.VC.db
+.vs/
+
+# Backup files
+Backup/
+*.bak
+*~
+
+# Build logs only
+*.log
+
+# NOTE: Being conservative - NOT ignoring .txt files
+# as we're unsure which are input data vs output results
+# All .txt files will be tracked by Git
+
+# Upgrade logs
+UpgradeLog*.htm
+UpgradeLog*.XML
+_UpgradeReport_Files/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

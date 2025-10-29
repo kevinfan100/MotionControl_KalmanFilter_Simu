@@ -1,0 +1,84 @@
+{
+  "projectInfo": {
+    "name": "Motion Control Kalman Filter Simulation",
+    "description": "A C++ simulation framework for optical trap motion control with integrated Kalman filter state estimation. Simulates 3D particle trapping in an optical tweezers system with magnetic force coils.",
+    "language": "C++",
+    "buildSystem": "Visual Studio 2022 (MSBuild)",
+    "version": "Jul3_2014"
+  },
+  "keyComponents": {
+    "mainEntry": "jul3_2014_motioncontrol_hallsensor_akf_ar2/Jul3_2014_MotionControl_HallSensor_AKF_AR2.cpp",
+    "coreEngine": "jul3_2014_motioncontrol_hallsensor_akf_ar2/CALCULATION.cpp",
+    "header": "jul3_2014_motioncontrol_hallsensor_akf_ar2/CALCULATION.h",
+    "dataFiles": [
+      "jul3_2014_motioncontrol_hallsensor_akf_ar2/KI_10Hz.txt",
+      "jul3_2014_motioncontrol_hallsensor_akf_ar2/InvKIreal.txt",
+      "jul3_2014_motioncontrol_hallsensor_akf_ar2/Feb28_2013 Coeff2nd_0CenterErr_I*.txt"
+    ]
+  },
+  "buildNotes": {
+    "platform": "Win32",
+    "toolset": "v143",
+    "configurations": ["Debug", "Release"],
+    "preprocessorDefines": [
+      "_CRT_SECURE_NO_WARNINGS (to suppress sprintf warnings)"
+    ]
+  },
+  "physicalParameters": {
+    "samplingRate": "1612 Hz",
+    "simulationRate": "100,000 Hz",
+    "workspace": "550 μm normalized radius",
+    "poles": 6,
+    "controlModes": ["PID", "Sliding Mode", "Super-Twisting"]
+  },
+  "recentFixes": [
+    {
+      "date": "2025-10-29",
+      "issue": "N2pN macro redefinition in CALCULATION.h",
+      "severity": "Critical",
+      "fix": "Removed duplicate definition at line 28",
+      "details": "Macro was defined twice with conflicting values (1e12 vs 1e-12)"
+    },
+    {
+      "date": "2025-10-29",
+      "issue": "CRT security warnings for sprintf",
+      "severity": "Medium",
+      "fix": "Added _CRT_SECURE_NO_WARNINGS to preprocessor definitions",
+      "details": "VS2022 warned about unsafe sprintf calls, suppressed via project settings"
+    },
+    {
+      "date": "2025-10-29",
+      "issue": "Runtime Access Violation in Tracking_Simu",
+      "severity": "Critical",
+      "fix": "Enabled thermal data file loading in main program",
+      "details": "Program crashed because ThmForce_X_NOa_RD and DampWtr_X_Oa_RD arrays were not initialized. Fixed by uncommenting data loading code at lines 45-58",
+      "affectedFiles": [
+        "Jul3_2014_MotionControl_HallSensor_AKF_AR2.cpp"
+      ],
+      "requiredDataFiles": [
+        "Thermal Force all XYZ Water DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt",
+        "Thermal Noise XYZ 1612SplRate (SI unit).txt",
+        "Meas. Noise XYZ (SI unit).txt"
+      ]
+    },
+    {
+      "date": "2025-10-29",
+      "issue": "Chinese character encoding (garbled comments)",
+      "severity": "Low",
+      "fix": "Added /utf-8 compiler option to project settings",
+      "details": "Original files used Big5/mixed encoding, VS2022 defaults to UTF-8. Added /utf-8 flag to force UTF-8 interpretation"
+    }
+  ],
+  "debugLog": ".claude/debug_log.md",
+  "notes": {
+    "cleanupCompleted": "2025-10-29",
+    "removedFiles": [
+      ".claude/commands/build.md",
+      ".claude/commands/explain-structure.md",
+      ".claude/commands/run-simulation.md",
+      ".claude/FIXES_SUMMARY.md",
+      ".claude/project_overview.md"
+    ],
+    "keepOnlyEssential": "Maintaining minimal and clean project structure"
+  }
+}
