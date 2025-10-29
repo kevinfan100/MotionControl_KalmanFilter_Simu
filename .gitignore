@@ -31,6 +31,10 @@ Backup/
 # as we're unsure which are input data vs output results
 # All .txt files will be tracked by Git
 
+# Large thermal data files (> 100MB, exceeds GitHub limit)
+**/Thermal Force all XYZ Gly DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt
+**/Thermal Force all XYZ Water DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt
+
 # Upgrade logs
 UpgradeLog*.htm
 UpgradeLog*.XML
