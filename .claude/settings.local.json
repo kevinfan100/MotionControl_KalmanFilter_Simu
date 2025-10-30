@@ -27,7 +27,8 @@
       "Bash(cmd /c \"if not exist .claude\\commands mkdir .claude\\commands\")",
       "Bash(git init:*)",
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(git merge dev --no-ff -m \"$(cat <<''EOF''\nMerge dev: Add Positioning Only simulation framework\n\nMerges the complete Positioning Only simulation framework with MATLAB analysis tools.\n\nKey features:\n- P-only positioning control (tested stable range: Kp=10-35)\n- MATLAB analysis and visualization scripts\n- Organized folder structure (matlab_analysis/positioning/)\n- Comprehensive documentation of Pgain stability\n\nThis provides a solid foundation for future tracking and control algorithm development.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
