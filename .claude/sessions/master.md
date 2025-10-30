@@ -1,70 +1,51 @@
-# Master 分支工作紀錄
+# Master 分支工作記錄
 
-此檔案記錄所有在 master 分支上的工作階段。
-
----
-
-## 2025-10-29 15:45 (修正大檔案問題)
-
-### 摘要
-- 修正 GitHub 推送問題：兩個熱力資料檔案超過 100MB 限制
-- 將大檔案加入 .gitignore（保留本地檔案）
-- 從 Git 追蹤中移除大檔案
-- 更新階段紀錄檔結構
-
-### 修改的檔案
-- .gitignore（新增大檔案忽略規則）
-- .claude/sessions/master.md（補充完整記錄）
-
-### Commit
-`5ede82d - Fix: Exclude large thermal data files from Git tracking`
-
-### 說明
-發現兩個 327MB 的熱力資料檔案無法推送到 GitHub（限制 100MB）。將它們從 Git 追蹤中移除但保留在本地，確保模擬程式仍可正常運作。
-
-**受影響的檔案**：
-- Thermal Force all XYZ Gly DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt (327.58 MB)
-- Thermal Force all XYZ Water DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt (327.58 MB)
+此檔案記錄 master 分支的所有工作階段和 merge 記錄，最新記錄在最上方。
 
 ---
 
-## 2025-10-29 15:30 (初始化專案)
+## 2025-10-30 12:45 - Merge from Dev
 
 ### 摘要
-- 初始化 Git 儲存庫
-- 建立 master 和 dev 分支結構
-- 設定 GitHub 遠端連接
-- 建立 4 個客製化 Claude Code 指令
-- 建立階段紀錄檔結構（master.md 和 dev.md）
+合併 dev 分支的逆模型測試功能到 master 主線
 
-### 修改的檔案
-- .gitignore（新增 .vs/ 忽略規則）
-- .claude/commands/save-progress.md（自動保存進度並推送）
-- .claude/commands/resume.md（開始工作時檢查專案狀態）
-- .claude/commands/review.md（總結最近 1-2 天進度）
-- .claude/commands/clean.md（識別並管理測試腳本）
-- .claude/sessions/master.md（master 分支紀錄檔）
-- .claude/sessions/dev.md（dev 分支紀錄檔）
+### 主要功能
+- ✅ 啟用並優化逆模型測試模組（Module 0）
+- ✅ 實作完整的測試輸出格式
+- ✅ 自動誤差計算與驗證
+- ✅ 解決 VS Code 繁體中文註解亂碼問題
+- ✅ 建立工作流程規範文件
 
-### Commit
-`d5c278f - Initial commit: Motion Control Kalman Filter Simulation`
+### 測試驗證
+```
+Test Case: Position (3, 4, 5) μm, Force (6, 4, 5) pN
+Result:    Output Force (5.978, 3.978, 4.999) pN
+Error:     < 0.6% ✅ PASS
+```
 
-### 說明
-完成專案的初始設定，建立了完整的開發環境和工作流程基礎：
+### 新增檔案
+- `.claude/workflow_rules.md` - 開發工作流程規範
+- `.claude/main_program_features_analysis.md` - 主程式功能分析
+- `.claude/vscode_encoding_guide.md` - VS Code 編碼指南
+- `.vscode/settings.json` - VS Code UTF-8 設定
+- `.claude/sessions/dev.md` - Dev 分支工作記錄
+- `.claude/sessions/master.md` - Master 分支工作記錄
 
-**分支策略**：
-- master：穩定版本，只放測試過的程式碼
-- dev：開發分支，日常工作都在這裡進行
+### 修改檔案
+- `jul3_2014_motioncontrol_hallsensor_akf_ar2/Jul3_2014_MotionControl_HallSensor_AKF_AR2.cpp` - 啟用測試模組
+- `.gitignore` - 新增大型熱力數據檔案忽略規則
+- `.claude/settings.local.json` - 新增測試權限
+- `CLAUDE.md` - 更新專案說明
 
-**客製化指令功能**：
-- `/save-progress`：自動生成摘要、更新紀錄檔、commit 並推送
-- `/resume`：顯示專案狀態、最近進度、檔案驗證、工作流程規則
-- `/review`：總結最近 7 天的工作進度
-- `/clean`：掃描並管理 test_ 開頭的測試腳本
+### Merge Commit
+`bee76e7 - Merge dev into master: Enable inverse model test`
 
-**階段紀錄檔設計**：
-- 每個分支一個檔案（master.md、dev.md）
-- 流水帳式記錄，最新的在最上方
-- 便於導航和搜尋
+### 來源分支
+- dev branch commit: `7bf8296 - Enable inverse model test with optimized output and error handling`
+
+### 下一步
+- 測試其他功能模組（Positioning、Tracking）
+- 深入學習逆模型內部運作原理
+- 持續在 dev 分支開發新功能
 
 ---
