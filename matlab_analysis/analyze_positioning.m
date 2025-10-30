@@ -16,15 +16,9 @@ STEADY_TIME = 10;     % Last 10 seconds for steady-state analysis
 fprintf('========== Positioning Only Analysis ==========\n\n');
 fprintf('Loading simulation data...\n');
 
+
 % ========================================
-% 手动设定要分析的数据文件
-% 直接修改这个文件名即可
-% ========================================
-DATA_FILE = 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(15.0,15.0,15.0) (10-30-2025).txt';
-% 可选文件名：
-% 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(10.0,10.0,10.0) (10-30-2025).txt'
-% 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(15.0,15.0,15.0) (10-30-2025).txt'
-% 'Trapping Simu WTR at(0.0,0.0,0.0)um with PID gain(30.0,30.0,30.0) (1-1-2014).txt'
+DATA_FILE = 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(50.0,50.0,50.0) (10-30-2025).txt';
 % ========================================
 
 % Try multiple possible paths
@@ -263,8 +257,8 @@ reportFile = fullfile(outputDir, 'reports', sprintf('positioning_analysis_%s.txt
 fid = fopen(reportFile, 'w');
 fprintf(fid, '========== Positioning Only Analysis Report ==========\n');
 fprintf(fid, 'Date: %s\n', datestr(now));
-fprintf(fid, 'Input file: %s\n', files(idx).name);
-fprintf(fid, 'Simulation duration: %.2f seconds\n', time(end));
+fprintf(fid, 'Input file: %s\n', DATA_FILE);
+fprintf(fid, 'Simulation duration: %.2f ms\n', time(end)*1000);
 fprintf(fid, 'Samples: %d\n\n', numSamples);
 
 for ax = 1:3
