@@ -92,7 +92,7 @@ int main()
 
 	CALC.Positioning_Simu_Init( NUM_Simu_Meas );
 
-	//CALC.Estimation_Init( WTR );  //water
+	CALC.Estimation_Init( WTR );  //water (needed for F_Ext_x/y/z_pN_Apply initialization)
 
 	double Kp = 10.0;
 	CALC.Set_PIDgain( Kp,Kp,Kp,  0.0,0.0,0.0,  0.0,0.0,0.0 );
