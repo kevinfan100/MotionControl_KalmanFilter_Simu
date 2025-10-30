@@ -25,7 +25,8 @@
       "Bash(if not exist \".claude\" mkdir .claude)",
       "Bash(if not exist \".claude\\commands\" mkdir .claudecommands)",
       "Bash(cmd /c \"if not exist .claude\\commands mkdir .claude\\commands\")",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []
