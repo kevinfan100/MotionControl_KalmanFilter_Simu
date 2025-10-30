@@ -31,7 +31,10 @@
       "Bash(.Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
       "Bash(./Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
       "Bash(../Release/Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(for f in positioning_*.png)",
+      "Bash(do [ -f \"$f\" ])"
     ],
     "deny": [],
     "ask": []

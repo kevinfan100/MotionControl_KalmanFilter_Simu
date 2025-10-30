@@ -39,9 +39,8 @@ jul3_2014_motioncontrol_hallsensor_akf_ar2/Thermal Force all XYZ Water DampInc 1
 jul3_2014_motioncontrol_hallsensor_akf_ar2/Trapping Simu*.txt
 jul3_2014_motioncontrol_hallsensor_akf_ar2/TRACKING Ramp*.txt
 
-# MATLAB analysis outputs
-matlab_analysis/output/
-output/
+# MATLAB analysis outputs (generated figures and reports)
+matlab_analysis/*/results/
 
 # Upgrade logs
 UpgradeLog*.htm

@@ -109,10 +109,14 @@ Currently initialized pointers (lines 202-224 in CALCULATION.cpp):
 
 Edit `Jul3_2014_MotionControl_HallSensor_AKF_AR2.cpp`:
 
-**PID Gains** (line ~107):
+**PID Gains** (line ~97):
 ```cpp
-CALC.Set_PIDgain(50, 50, 50, 200, 200, 200, 0, 0, 0);
+CALC.Set_PIDgain(30.0, 30.0, 30.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 // Parameters: Kp_x, Kp_y, Kp_z, Ki_x, Ki_y, Ki_z, Kd_x, Kd_y, Kd_z
+
+// IMPORTANT: Tested stable range for P-only control (Positioning mode):
+//   Stable: Kp = 10-35 (steady-state error < 20 nm, current < 0.1 A)
+//   UNSTABLE: Kp ≥ 40 (causes numerical divergence, position error > 10^9 nm)
 ```
 
 **Trajectory** (line ~102):

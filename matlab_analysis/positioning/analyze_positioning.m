@@ -18,14 +18,15 @@ fprintf('Loading simulation data...\n');
 
 
 % ========================================
-DATA_FILE = 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(35.0,35.0,35.0) (10-30-2025).txt';
+DATA_FILE = 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(50.0,50.0,50.0) (10-30-2025).txt';
 % ========================================
 
 % Try multiple possible paths
 possiblePaths = {
-    '../jul3_2014_motioncontrol_hallsensor_akf_ar2/',  % From matlab_analysis/
-    './jul3_2014_motioncontrol_hallsensor_akf_ar2/',   % From project root
-    'jul3_2014_motioncontrol_hallsensor_akf_ar2/'      % Direct
+    '../../jul3_2014_motioncontrol_hallsensor_akf_ar2/',  % From matlab_analysis/positioning/
+    '../jul3_2014_motioncontrol_hallsensor_akf_ar2/',     % From matlab_analysis/
+    './jul3_2014_motioncontrol_hallsensor_akf_ar2/',      % From project root
+    'jul3_2014_motioncontrol_hallsensor_akf_ar2/'         % Direct
 };
 
 % Find the data file
@@ -233,7 +234,7 @@ for ax = 1:3
 end
 
 %% 7. Save Outputs
-outputDir = 'output';
+outputDir = 'results';
 if ~exist(outputDir, 'dir')
     mkdir(outputDir);
 end
@@ -262,13 +263,13 @@ end
 % Save all 3 figures with Pgain in filename
 dateStr = datestr(now, 'yyyy-mm-dd');
 for ax = 1:3
-    figFile = fullfile(outputDir, 'figures', sprintf('positioning_%s_axis_%s_%s.png', axes_names{ax}, pgainStr, dateStr));
+    figFile = fullfile(outputDir, 'figures', sprintf('%s_axis_%s_%s.png', axes_names{ax}, pgainStr, dateStr));
     saveas(figs(ax), figFile);
     fprintf('Figure saved: %s\n', figFile);
 end
 
 % Save report with Pgain in filename
-reportFile = fullfile(outputDir, 'reports', sprintf('positioning_analysis_%s_%s.txt', pgainStr, dateStr));
+reportFile = fullfile(outputDir, 'reports', sprintf('analysis_%s_%s.txt', pgainStr, dateStr));
 fid = fopen(reportFile, 'w');
 fprintf(fid, '========== Positioning Only Analysis Report ==========\n');
 fprintf(fid, 'Date: %s\n', datestr(now));

@@ -94,7 +94,7 @@ int main()
 
 	CALC.Estimation_Init( WTR );  //water (needed for F_Ext_x/y/z_pN_Apply initialization)
 
-	double Kp = 10.0;
+	double Kp = 30.0;
 	CALC.Set_PIDgain( Kp,Kp,Kp,  0.0,0.0,0.0,  0.0,0.0,0.0 );
 	CALC.Calc_Ctrl_Coeff_Force();  //c2d (continuous to discrete) requires control parameters
 
