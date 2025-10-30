@@ -26,7 +26,8 @@
       "Bash(if not exist \".claude\\commands\" mkdir .claudecommands)",
       "Bash(cmd /c \"if not exist .claude\\commands mkdir .claude\\commands\")",
       "Bash(git init:*)",
-      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)"
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

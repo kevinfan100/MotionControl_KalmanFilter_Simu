@@ -249,3 +249,4 @@ After modifying control parameters or algorithms:
 3. Check output file is generated
 4. Verify file size is reasonable (>1 MB for typical simulation)
 5. Plot results in MATLAB/Python to validate trajectory and forces
+- 盡量不要態頻繁隨意的生成說明文件，先再跟我說明讓我了解後，如果我有需要再幫我生成，也可以詢問我需不需要

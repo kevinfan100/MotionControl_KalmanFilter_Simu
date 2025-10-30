@@ -32,16 +32,18 @@ Backup/
 # All .txt files will be tracked by Git
 
 # Large thermal data files (> 100MB, exceeds GitHub limit)
-**/Thermal Force all XYZ Gly DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt
-**/Thermal Force all XYZ Water DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt
+jul3_2014_motioncontrol_hallsensor_akf_ar2/Thermal Force all XYZ Gly DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt
+jul3_2014_motioncontrol_hallsensor_akf_ar2/Thermal Force all XYZ Water DampInc 10sec,10sec,10sec 100000SplRate (SI unit).txt
 
 # Upgrade logs
 UpgradeLog*.htm
 UpgradeLog*.XML
 _UpgradeReport_Files/
 
-# VS Code
-.vscode/
+# VS Code (ignore user-specific files, but track settings)
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 
 # JetBrains
 .idea/
