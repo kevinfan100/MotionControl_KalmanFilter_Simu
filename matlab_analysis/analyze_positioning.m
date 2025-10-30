@@ -142,8 +142,8 @@ for ax = 1:3
     fprintf('\n');
 end
 
-%% 4. Current Statistics
-fprintf('--- Current Statistics ---\n');
+%% 5. Current Statistics
+fprintf('\n--- Current Statistics ---\n');
 currents = [I1, I2, I3, I4, I5, I6];
 fprintf('       Avg (A)    Max (A)\n');
 for i = 1:6
