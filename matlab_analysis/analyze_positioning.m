@@ -139,6 +139,12 @@ for ax = 1:3
     max_force = max(abs(force));
     fprintf('Average control force: %.3f pN\n', avg_force);
     fprintf('Maximum control force: %.3f pN\n', max_force);
+
+    % Terminal standard deviation for force (last 10 seconds)
+    terminal_samples = min(STEADY_TIME * SAMPLING_RATE, numSamples);
+    terminal_idx = (numSamples - terminal_samples + 1):numSamples;
+    terminal_force_std = std(force(terminal_idx));
+    fprintf('Terminal force std: %.3f pN\n', terminal_force_std);
     fprintf('\n');
 end
 
@@ -157,80 +163,82 @@ total_max = max(max(abs(currents)));
 fprintf('Total average current: %.3f A\n', total_avg);
 fprintf('Total maximum current: %.3f A\n', total_max);
 
-%% 6. Generate Figures
+%% 6. Generate Figures (3 separate windows for X, Y, Z)
 fprintf('\n--- Generating Figures ---\n');
 
-fig = figure('Position', [100, 100, 1400, 1000], 'Color', 'white');
+% Define colors for each axis
+axis_colors = {'r', 'g', 'b'}; % X=red, Y=green, Z=blue
 
-% Figure 1: Position Comparison (3 subplots for X, Y, Z)
+% Create 3 separate figure windows
+figs = [];
 for ax = 1:3
-    subplot(4, 3, ax);
-    hold on; grid on;
-    plot(time, eval(['T' axes_names{ax} '_Om']), 'k--', 'LineWidth', 1.5, 'DisplayName', 'Target');
-    plot(time, eval(['M' axes_names{ax} '_Om']), 'b-', 'LineWidth', 1, 'DisplayName', 'Measured');
-    ylabel([axes_names{ax} ' Position (\mum)']);
-    if ax == 1
-        title('Position Comparison');
-    end
-    if ax == 3
-        xlabel('Time (s)');
-    end
-    legend('Location', 'best');
-end
+    figs(ax) = figure('Position', [100 + (ax-1)*50, 100 + (ax-1)*50, 1000, 800], 'Color', 'white');
 
-% Figure 2: Error Convergence (3 subplots for X, Y, Z)
-for ax = 1:3
-    subplot(4, 3, 3 + ax);
-    hold on; grid on;
-    err_nm = errors{ax} * 1000; % Convert to nm
-    plot(time, err_nm, 'r-', 'LineWidth', 1);
-    yline(0, 'k--', 'LineWidth', 0.5);
-    ylabel([axes_names{ax} ' Error (nm)']);
-    if ax == 1
-        title('Error Convergence');
-    end
-    if ax == 3
-        xlabel('Time (s)');
-    end
-end
-
-% Figure 3: Control Force (3 subplots for X, Y, Z)
-for ax = 1:3
-    subplot(4, 3, 6 + ax);
-    hold on; grid on;
+    % Convert position to nm
+    T_pos_nm = eval(['T' axes_names{ax} '_Om']) * 1000;
+    M_pos_nm = eval(['M' axes_names{ax} '_Om']) * 1000;
     force = forces{ax};
-    plot(time, force, 'g-', 'LineWidth', 1);
 
-    % Add average and max lines
-    avg_val = mean(abs(force));
-    max_val = max(abs(force));
-    yline(avg_val, 'b--', sprintf('Avg: %.2f pN', avg_val), 'LineWidth', 1.5);
-    yline(-avg_val, 'b--', 'LineWidth', 1.5);
-    yline(max_val, 'r--', sprintf('Max: %.2f pN', max_val), 'LineWidth', 1.5);
-    yline(-max_val, 'r--', 'LineWidth', 1.5);
+    % Calculate terminal statistics (last 10 seconds)
+    terminal_samples = min(STEADY_TIME * SAMPLING_RATE, numSamples);
+    terminal_idx = (numSamples - terminal_samples + 1):numSamples;
 
-    ylabel([axes_names{ax} ' Force (pN)']);
-    if ax == 1
-        title('Control Force');
-    end
-    if ax == 3
-        xlabel('Time (s)');
-    end
+    % Position statistics
+    pos_mean = mean(M_pos_nm(terminal_idx));
+    pos_std = std(M_pos_nm(terminal_idx));
+
+    % Force statistics
+    force_mean = mean(force(terminal_idx));
+    force_std = std(force(terminal_idx));
+
+    % Subplot 1: Position Comparison
+    subplot(2, 1, 1);
+    hold on; grid on;
+    box on;
+
+    % Plot Target with very thick dashed line
+    h_target = plot(time, T_pos_nm, 'k--', 'LineWidth', 4, 'DisplayName', 'Target');
+    % Plot Measured
+    h_measured = plot(time, M_pos_nm, 'Color', axis_colors{ax}, 'LineWidth', 2.5, 'DisplayName', 'Measured');
+
+    % Add mean and std lines
+    yline(pos_mean, '-.', sprintf('Mean: %.2f nm', pos_mean), ...
+        'Color', [0.3 0.3 0.3], 'LineWidth', 2.5, 'FontSize', 12, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+    yline(pos_mean + pos_std, ':', sprintf('+1 Std: %.2f nm', pos_std), ...
+        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+    yline(pos_mean - pos_std, ':', sprintf('-1 Std', pos_std), ...
+        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+
+    ylabel([axes_names{ax} ' Position (nm)'], 'FontSize', 16, 'FontWeight', 'bold');
+    title([axes_names{ax} ' Axis - Position Comparison'], 'FontSize', 18, 'FontWeight', 'bold');
+    xlabel('Time (s)', 'FontSize', 16, 'FontWeight', 'bold');
+    legend([h_target, h_measured], 'Location', 'best', 'FontSize', 12, 'FontWeight', 'bold');
+
+    % Increase tick font size and linewidth
+    set(gca, 'FontSize', 14, 'FontWeight', 'bold', 'LineWidth', 2);
+
+    % Subplot 2: Control Force
+    subplot(2, 1, 2);
+    hold on; grid on;
+    box on;
+
+    plot(time, force, 'Color', axis_colors{ax}, 'LineWidth', 2);
+
+    % Add mean and std lines
+    yline(force_mean, '-.', sprintf('Mean: %.3f pN', force_mean), ...
+        'Color', [0.3 0.3 0.3], 'LineWidth', 2.5, 'FontSize', 12, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+    yline(force_mean + force_std, ':', sprintf('+1 Std: %.3f pN', force_std), ...
+        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+    yline(force_mean - force_std, ':', sprintf('-1 Std', force_std), ...
+        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+
+    ylabel([axes_names{ax} ' Force (pN)'], 'FontSize', 16, 'FontWeight', 'bold');
+    xlabel('Time (s)', 'FontSize', 16, 'FontWeight', 'bold');
+    title([axes_names{ax} ' Axis - Control Force'], 'FontSize', 18, 'FontWeight', 'bold');
+
+    % Increase tick font size and linewidth
+    set(gca, 'FontSize', 14, 'FontWeight', 'bold', 'LineWidth', 2);
 end
-
-% Figure 4: 6 Currents (single plot)
-subplot(4, 3, [10, 11, 12]);
-hold on; grid on;
-plot(time, I1, 'LineWidth', 1, 'DisplayName', 'I1');
-plot(time, I2, 'LineWidth', 1, 'DisplayName', 'I2');
-plot(time, I3, 'LineWidth', 1, 'DisplayName', 'I3');
-plot(time, I4, 'LineWidth', 1, 'DisplayName', 'I4');
-plot(time, I5, 'LineWidth', 1, 'DisplayName', 'I5');
-plot(time, I6, 'LineWidth', 1, 'DisplayName', 'I6');
-ylabel('Current (A)');
-xlabel('Time (s)');
-title('Coil Currents');
-legend('Location', 'best');
 
 %% 7. Save Outputs
 outputDir = 'output';
@@ -244,11 +252,13 @@ if ~exist(fullfile(outputDir, 'reports'), 'dir')
     mkdir(fullfile(outputDir, 'reports'));
 end
 
-% Save figure
+% Save all 3 figures
 dateStr = datestr(now, 'yyyy-mm-dd');
-figFile = fullfile(outputDir, 'figures', sprintf('positioning_analysis_%s.png', dateStr));
-saveas(fig, figFile);
-fprintf('Figure saved: %s\n', figFile);
+for ax = 1:3
+    figFile = fullfile(outputDir, 'figures', sprintf('positioning_%s_axis_%s.png', axes_names{ax}, dateStr));
+    saveas(figs(ax), figFile);
+    fprintf('Figure saved: %s\n', figFile);
+end
 
 % Save report
 reportFile = fullfile(outputDir, 'reports', sprintf('positioning_analysis_%s.txt', dateStr));
@@ -280,7 +290,12 @@ for ax = 1:3
     end
 
     fprintf(fid, 'Average force: %.3f pN\n', mean(abs(force)));
-    fprintf(fid, 'Maximum force: %.3f pN\n\n', max(abs(force)));
+    fprintf(fid, 'Maximum force: %.3f pN\n', max(abs(force)));
+
+    % Terminal standard deviation for force (last 10 seconds)
+    terminal_samples = min(STEADY_TIME * SAMPLING_RATE, numSamples);
+    terminal_idx = (numSamples - terminal_samples + 1):numSamples;
+    fprintf(fid, 'Terminal force std: %.3f pN\n\n', std(force(terminal_idx)));
 end
 
 fprintf(fid, '--- Current Statistics ---\n');
