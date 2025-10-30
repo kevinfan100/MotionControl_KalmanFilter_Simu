@@ -71,13 +71,13 @@ Fx_dsir_Om = data(:,25); Fy_dsir_Om = data(:,26); Fz_dsir_Om = data(:,27); % Des
 numSamples = length(TX_Om);
 time = (0:numSamples-1) / SAMPLING_RATE; % Time vector in seconds
 
-fprintf('  Samples: %d (~%.2f seconds)\n', numSamples, time(end));
+fprintf('  Samples: %d (~%.2f ms)\n', numSamples, time(end)*1000);
 
 %% 2. Initial Position Information
 fprintf('\n--- Initial Positions ---\n');
-fprintf('Target position (um): (%.3f, %.3f, %.3f)\n', TX_Om(1), TY_Om(1), TZ_Om(1));
-fprintf('Real initial position (um): (%.3f, %.3f, %.3f)\n', RX_Om(1), RY_Om(1), RZ_Om(1));
-fprintf('Measured initial position (um): (%.3f, %.3f, %.3f)\n', MX_Om(1), MY_Om(1), MZ_Om(1));
+fprintf('Target position (nm): (%.1f, %.1f, %.1f)\n', TX_Om(1)*1000, TY_Om(1)*1000, TZ_Om(1)*1000);
+fprintf('Real initial position (nm): (%.1f, %.1f, %.1f)\n', RX_Om(1)*1000, RY_Om(1)*1000, RZ_Om(1)*1000);
+fprintf('Measured initial position (nm): (%.1f, %.1f, %.1f)\n', MX_Om(1)*1000, MY_Om(1)*1000, MZ_Om(1)*1000);
 
 % Initial offset (Real - Target)
 initial_offset_X = RX_Om(1) - TX_Om(1);
@@ -86,10 +86,10 @@ initial_offset_Z = RZ_Om(1) - TZ_Om(1);
 initial_offset_magnitude = sqrt(initial_offset_X^2 + initial_offset_Y^2 + initial_offset_Z^2);
 
 fprintf('\nInitial offset from target:\n');
-fprintf('  X: %.3f um (%.1f nm)\n', initial_offset_X, initial_offset_X*1000);
-fprintf('  Y: %.3f um (%.1f nm)\n', initial_offset_Y, initial_offset_Y*1000);
-fprintf('  Z: %.3f um (%.1f nm)\n', initial_offset_Z, initial_offset_Z*1000);
-fprintf('  Magnitude: %.3f um (%.1f nm)\n', initial_offset_magnitude, initial_offset_magnitude*1000);
+fprintf('  X: %.1f nm\n', initial_offset_X*1000);
+fprintf('  Y: %.1f nm\n', initial_offset_Y*1000);
+fprintf('  Z: %.1f nm\n', initial_offset_Z*1000);
+fprintf('  Magnitude: %.1f nm\n', initial_offset_magnitude*1000);
 
 %% 3. Calculate Errors (Target - Measured)
 error_X = TX_Om - MX_Om;  % in um
@@ -116,8 +116,8 @@ for ax = 1:3
     % Convergence time (first time error < threshold)
     conv_idx = find(abs(err) < THRESHOLD_NM, 1, 'first');
     if ~isempty(conv_idx)
-        conv_time = time(conv_idx);
-        fprintf('Convergence time: %.3f s (error < %d nm)\n', conv_time, THRESHOLD_NM);
+        conv_time_ms = time(conv_idx) * 1000;
+        fprintf('Convergence time: %.2f ms (error < %d nm)\n', conv_time_ms, THRESHOLD_NM);
     else
         fprintf('Convergence time: NOT CONVERGED (error never < %d nm)\n', THRESHOLD_NM);
     end
@@ -201,18 +201,17 @@ for ax = 1:3
     % Plot Measured
     h_measured = plot(time, M_pos_nm, 'Color', axis_colors{ax}, 'LineWidth', 2.5, 'DisplayName', 'Measured');
 
-    % Add mean and std lines
-    yline(pos_mean, '-.', sprintf('Mean: %.2f nm', pos_mean), ...
-        'Color', [0.3 0.3 0.3], 'LineWidth', 2.5, 'FontSize', 12, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
-    yline(pos_mean + pos_std, ':', sprintf('+1 Std: %.2f nm', pos_std), ...
-        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
-    yline(pos_mean - pos_std, ':', sprintf('-1 Std', pos_std), ...
-        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+    % Add text annotation for statistics
+    stats_text = sprintf('Mean: %.2f nm\nStd: %.2f nm', pos_mean, pos_std);
+    text(0.98, 0.98, stats_text, ...
+        'Units', 'normalized', 'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', ...
+        'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 13, 'FontWeight', 'bold', ...
+        'Margin', 5, 'LineWidth', 1.5);
 
     ylabel([axes_names{ax} ' Position (nm)'], 'FontSize', 16, 'FontWeight', 'bold');
-    title([axes_names{ax} ' Axis - Position Comparison'], 'FontSize', 18, 'FontWeight', 'bold');
+    title([axes_names{ax} ' Position'], 'FontSize', 18, 'FontWeight', 'bold');
     xlabel('Time (s)', 'FontSize', 16, 'FontWeight', 'bold');
-    legend([h_target, h_measured], 'Location', 'best', 'FontSize', 12, 'FontWeight', 'bold');
+    legend([h_target, h_measured], 'Location', 'northeast', 'FontSize', 12, 'FontWeight', 'bold');
 
     % Increase tick font size and linewidth
     set(gca, 'FontSize', 14, 'FontWeight', 'bold', 'LineWidth', 2);
@@ -224,17 +223,16 @@ for ax = 1:3
 
     plot(time, force, 'Color', axis_colors{ax}, 'LineWidth', 2);
 
-    % Add mean and std lines
-    yline(force_mean, '-.', sprintf('Mean: %.3f pN', force_mean), ...
-        'Color', [0.3 0.3 0.3], 'LineWidth', 2.5, 'FontSize', 12, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
-    yline(force_mean + force_std, ':', sprintf('+1 Std: %.3f pN', force_std), ...
-        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
-    yline(force_mean - force_std, ':', sprintf('-1 Std', force_std), ...
-        'Color', [0.5 0.5 0.5], 'LineWidth', 2, 'FontSize', 11, 'FontWeight', 'bold', 'LabelHorizontalAlignment', 'left');
+    % Add text annotation for statistics
+    stats_text = sprintf('Mean: %.3f pN\nStd: %.3f pN', force_mean, force_std);
+    text(0.98, 0.98, stats_text, ...
+        'Units', 'normalized', 'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', ...
+        'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 13, 'FontWeight', 'bold', ...
+        'Margin', 5, 'LineWidth', 1.5);
 
     ylabel([axes_names{ax} ' Force (pN)'], 'FontSize', 16, 'FontWeight', 'bold');
     xlabel('Time (s)', 'FontSize', 16, 'FontWeight', 'bold');
-    title([axes_names{ax} ' Axis - Control Force'], 'FontSize', 18, 'FontWeight', 'bold');
+    title([axes_names{ax} ' Force'], 'FontSize', 18, 'FontWeight', 'bold');
 
     % Increase tick font size and linewidth
     set(gca, 'FontSize', 14, 'FontWeight', 'bold', 'LineWidth', 2);
