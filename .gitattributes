@@ -1,0 +1,2 @@
+jul3_2014_motioncontrol_hallsensor_akf_ar2/Thermal[[:space:]]Force[[:space:]]all[[:space:]]XYZ[[:space:]]Water[[:space:]]DampInc[[:space:]]10sec,10sec,10sec[[:space:]]100000SplRate[[:space:]](SI[[:space:]]unit).txt filter=lfs diff=lfs merge=lfs -text
+jul3_2014_motioncontrol_hallsensor_akf_ar2/Thermal[[:space:]]Force[[:space:]]all[[:space:]]XYZ[[:space:]]Gly[[:space:]]DampInc[[:space:]]10sec,10sec,10sec[[:space:]]100000SplRate[[:space:]](SI[[:space:]]unit).txt filter=lfs diff=lfs merge=lfs -text
