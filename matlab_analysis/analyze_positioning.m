@@ -73,12 +73,30 @@ time = (0:numSamples-1) / SAMPLING_RATE; % Time vector in seconds
 
 fprintf('  Samples: %d (~%.2f seconds)\n', numSamples, time(end));
 
-%% 2. Calculate Errors (Target - Measured)
+%% 2. Initial Position Information
+fprintf('\n--- Initial Positions ---\n');
+fprintf('Target position (um): (%.3f, %.3f, %.3f)\n', TX_Om(1), TY_Om(1), TZ_Om(1));
+fprintf('Real initial position (um): (%.3f, %.3f, %.3f)\n', RX_Om(1), RY_Om(1), RZ_Om(1));
+fprintf('Measured initial position (um): (%.3f, %.3f, %.3f)\n', MX_Om(1), MY_Om(1), MZ_Om(1));
+
+% Initial offset (Real - Target)
+initial_offset_X = RX_Om(1) - TX_Om(1);
+initial_offset_Y = RY_Om(1) - TY_Om(1);
+initial_offset_Z = RZ_Om(1) - TZ_Om(1);
+initial_offset_magnitude = sqrt(initial_offset_X^2 + initial_offset_Y^2 + initial_offset_Z^2);
+
+fprintf('\nInitial offset from target:\n');
+fprintf('  X: %.3f um (%.1f nm)\n', initial_offset_X, initial_offset_X*1000);
+fprintf('  Y: %.3f um (%.1f nm)\n', initial_offset_Y, initial_offset_Y*1000);
+fprintf('  Z: %.3f um (%.1f nm)\n', initial_offset_Z, initial_offset_Z*1000);
+fprintf('  Magnitude: %.3f um (%.1f nm)\n', initial_offset_magnitude, initial_offset_magnitude*1000);
+
+%% 3. Calculate Errors (Target - Measured)
 error_X = TX_Om - MX_Om;  % in um
 error_Y = TY_Om - MY_Om;
 error_Z = TZ_Om - MZ_Om;
 
-%% 3. Calculate Metrics for Each Axis
+%% 4. Calculate Metrics for Each Axis
 fprintf('\n--- Analysis Results ---\n\n');
 
 axes_names = {'X', 'Y', 'Z'};
@@ -139,7 +157,7 @@ total_max = max(max(abs(currents)));
 fprintf('Total average current: %.3f A\n', total_avg);
 fprintf('Total maximum current: %.3f A\n', total_max);
 
-%% 5. Generate Figures
+%% 6. Generate Figures
 fprintf('\n--- Generating Figures ---\n');
 
 fig = figure('Position', [100, 100, 1400, 1000], 'Color', 'white');
@@ -214,7 +232,7 @@ xlabel('Time (s)');
 title('Coil Currents');
 legend('Location', 'best');
 
-%% 6. Save Outputs
+%% 7. Save Outputs
 outputDir = 'output';
 if ~exist(outputDir, 'dir')
     mkdir(outputDir);
