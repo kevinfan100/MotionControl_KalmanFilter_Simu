@@ -16,7 +16,17 @@ STEADY_TIME = 10;     % Last 10 seconds for steady-state analysis
 fprintf('========== Positioning Only Analysis ==========\n\n');
 fprintf('Loading simulation data...\n');
 
-% Find the most recent simulation file
+% ========================================
+% 手动设定要分析的数据文件
+% 直接修改这个文件名即可
+% ========================================
+DATA_FILE = 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(15.0,15.0,15.0) (10-30-2025).txt';
+% 可选文件名：
+% 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(10.0,10.0,10.0) (10-30-2025).txt'
+% 'Trapping Simu WTR at(0.0,0.0,0.0)um Pgain(15.0,15.0,15.0) (10-30-2025).txt'
+% 'Trapping Simu WTR at(0.0,0.0,0.0)um with PID gain(30.0,30.0,30.0) (1-1-2014).txt'
+% ========================================
+
 % Try multiple possible paths
 possiblePaths = {
     '../jul3_2014_motioncontrol_hallsensor_akf_ar2/',  % From matlab_analysis/
@@ -24,38 +34,28 @@ possiblePaths = {
     'jul3_2014_motioncontrol_hallsensor_akf_ar2/'      % Direct
 };
 
-filePattern = 'Trapping Simu WTR at*.txt';
-files = [];
-dataPath = '';
-
+% Find the data file
+filename = '';
 for i = 1:length(possiblePaths)
-    tempFiles = dir(fullfile(possiblePaths{i}, filePattern));
-    if ~isempty(tempFiles)
-        files = tempFiles;
-        dataPath = possiblePaths{i};
+    testPath = fullfile(possiblePaths{i}, DATA_FILE);
+    if isfile(testPath)
+        filename = testPath;
+        fprintf('  Found data: %s\n', testPath);
         break;
     end
 end
 
-if isempty(files)
-    fprintf('\nError: No simulation output file found!\n');
+if isempty(filename)
+    fprintf('\nError: Data file not found!\n');
+    fprintf('Looking for: %s\n', DATA_FILE);
     fprintf('Searched in:\n');
     for i = 1:length(possiblePaths)
         fprintf('  - %s\n', possiblePaths{i});
     end
-    fprintf('\nPlease:\n');
-    fprintf('  1. Run the C++ simulation first\n');
-    fprintf('  2. Make sure you are in the matlab_analysis/ directory\n');
-    fprintf('  3. Or run from project root directory\n');
-    error('Simulation output file not found.');
+    error('Data file not found.');
 end
 
-fprintf('  Found data in: %s\n', dataPath);
-
-% Get the most recent file
-[~, idx] = max([files.datenum]);
-filename = fullfile(dataPath, files(idx).name);
-fprintf('  File: %s\n', files(idx).name);
+fprintf('  >>> ANALYZING: %s\n', DATA_FILE);
 
 % Read data (skip 4 header lines)
 data = readmatrix(filename, 'NumHeaderLines', 4);
