@@ -17,13 +17,40 @@ fprintf('========== Positioning Only Analysis ==========\n\n');
 fprintf('Loading simulation data...\n');
 
 % Find the most recent simulation file
-dataPath = '../jul3_2014_motioncontrol_hallsensor_akf_ar2/';
+% Try multiple possible paths
+possiblePaths = {
+    '../jul3_2014_motioncontrol_hallsensor_akf_ar2/',  % From matlab_analysis/
+    './jul3_2014_motioncontrol_hallsensor_akf_ar2/',   % From project root
+    'jul3_2014_motioncontrol_hallsensor_akf_ar2/'      % Direct
+};
+
 filePattern = 'Trapping Simu WTR at*.txt';
-files = dir(fullfile(dataPath, filePattern));
+files = [];
+dataPath = '';
+
+for i = 1:length(possiblePaths)
+    tempFiles = dir(fullfile(possiblePaths{i}, filePattern));
+    if ~isempty(tempFiles)
+        files = tempFiles;
+        dataPath = possiblePaths{i};
+        break;
+    end
+end
 
 if isempty(files)
-    error('No simulation output file found! Please run the C++ simulation first.');
+    fprintf('\nError: No simulation output file found!\n');
+    fprintf('Searched in:\n');
+    for i = 1:length(possiblePaths)
+        fprintf('  - %s\n', possiblePaths{i});
+    end
+    fprintf('\nPlease:\n');
+    fprintf('  1. Run the C++ simulation first\n');
+    fprintf('  2. Make sure you are in the matlab_analysis/ directory\n');
+    fprintf('  3. Or run from project root directory\n');
+    error('Simulation output file not found.');
 end
+
+fprintf('  Found data in: %s\n', dataPath);
 
 % Get the most recent file
 [~, idx] = max([files.datenum]);
