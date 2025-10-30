@@ -27,7 +27,8 @@
 
   // File associations
   "files.associations": {
-    "*.h": "cpp",
-    "*.cpp": "cpp"
-  }
+	"*.h": "cpp",
+	"*.cpp": "cpp",
+	"iostream": "cpp"
+}
 }

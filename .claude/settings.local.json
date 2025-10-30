@@ -26,7 +26,12 @@
       "Bash(if not exist \".claude\\commands\" mkdir .claudecommands)",
       "Bash(cmd /c \"if not exist .claude\\commands mkdir .claude\\commands\")",
       "Bash(git init:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(tree:*)",
+      "Bash(.Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
+      "Bash(./Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
+      "Bash(../Release/Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []
