@@ -2,7 +2,30 @@
   "permissions": {
     "allow": [
       "Bash(git log:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git init:*)",
+      "Bash(dir:*)",
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(awk:*)",
+      "Bash(findstr:*)",
+      "Bash(xargs:*)",
+      "Bash(tree:*)",
+      "Bash(test:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(del:*)",
+      "Bash(matlab:*)",
+      "Bash(msbuild:*)",
+      "Bash(./Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
+      "Bash(../Release/Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": []
