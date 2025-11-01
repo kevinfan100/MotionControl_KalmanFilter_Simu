@@ -2,12 +2,6 @@
   "permissions": {
     "allow": [
       "Bash(git log:*)",
-      "Bash(dir:*)",
-      "Bash(head:*)",
-      "Bash(wc:*)",
-      "Bash(awk:*)",
-      "Bash(NUL)",
-      "Bash(python3:*)",
       "Bash(git add:*)"
     ],
     "deny": [],
