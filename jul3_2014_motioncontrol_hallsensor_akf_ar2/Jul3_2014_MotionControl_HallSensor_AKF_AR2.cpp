@@ -84,7 +84,7 @@ int main()
 	//###############################
 	//****** Positioning Only: ******
 	//###############################
-	int NUM_Simu_Meas = 40000; //sample spot (sampling time)
+	/*int NUM_Simu_Meas = 40000; //sample spot (sampling time)
 
 	CALC.Trap_Target_umOm[X] = 0.0; //center
 	CALC.Trap_Target_umOm[Y] = 0.0;
@@ -107,7 +107,7 @@ int main()
 		CALC.Pgain[X], CALC.Pgain[Y], CALC.Pgain[Z]);
 	CALC.Write_SimuRst_Target_Meas_Real_Curr_Force(fname_TrapRst);
 
-	CALC.Simu_Finalize(); //delete pointers
+	CALC.Simu_Finalize(); //delete pointers*/
 	//####################################
 	//****** (end) Positioning Only ******
 	//####################################
@@ -117,27 +117,40 @@ int main()
 	//############################
 	//****** Tracking Only: ******
 	//############################
-	//double deg = 0.0;
-	////CALC.RampTracking_Init(70.0, 0.0, 0, 4, deg);  //xyz motion
-	//CALC.RampTracking_Init(40.0, 0.0, 0, 200, deg);
 
-	//CALC.ThmF_Counter = 0;
-	//CALC.Index = 0;
+	// Ramp trajectory parameters (modify here only)
+	double RangeXY_um = 40.0;
+	double RangeZ_um = 20.0;
+	int UP_or_DOWN = 0;
+	int Speed_um_per_s = 200;
+	double deg = 45.0;
 
-	//CALC.Set_PIDgain( 50,50,50,  200.0,200.0,200.0,  0.0,0.0,0.0 );
-	//CALC.Calc_Ctrl_Coeff_Force();
+	//CALC.RampTracking_Init(70.0, 0.0, 0, 4, deg);  //xyz motion
+	CALC.RampTracking_Init(RangeXY_um, RangeZ_um, UP_or_DOWN, Speed_um_per_s, deg);
 
-	//CALC.Tracking_Simu( THEO ); //Bias & Pole Strength Effect are included
+	CALC.ThmF_Counter = 0;
+	CALC.Index = 0;
 
-	//char fname_TrapRst [300];
-	//sprintf( fname_TrapRst,"TRACKING Ramp (%2.1f degree) Simu WTR Pgain(%3.1f,%3.1f,%3.1f) Igain(%3.1f,%3.1f,%3.1f) Dgain(%3.1f,%3.1f,%3.1f) (9-21-2016).txt",
-	//	deg,
-	//	CALC.Pgain[X], CALC.Pgain[Y], CALC.Pgain[Z],
-	//	CALC.Igain[X], CALC.Igain[Y], CALC.Igain[Z],
-	//	CALC.Dgain[X], CALC.Dgain[Y], CALC.Dgain[Z]);
-	//CALC.Write_SimuRst_Target_Meas_Real_Curr_Force(fname_TrapRst);
+	double Kp = 35.0;
+	double Ki = 0.0;
+	double Kd = 1.0;
+	CALC.Set_PIDgain( Kp,Kp,Kp,  Ki,Ki,Ki,  Kd,Kd,Kd );
+	CALC.Calc_Ctrl_Coeff_Force();
 
-	//CALC.Simu_Finalize(); //delete pointers
+	CALC.Tracking_Simu( THEO ); //Bias & Pole Strength Effect are included
+
+	// Generate output filename automatically from parameters
+	char fname_TrapRst [300];
+	sprintf( fname_TrapRst,"TRACKING_Ramp_%dum_%dums_%ddeg_WTR_THEO_P%d_I%d_D%d_20251102.txt",
+		(int)RangeXY_um,
+		Speed_um_per_s,
+		(int)deg,
+		(int)CALC.Pgain[X],  // P gain (assuming same for all axes)
+		(int)CALC.Igain[X],  // I gain (assuming same for all axes)
+		(int)CALC.Dgain[X]); // D gain (assuming same for all axes)
+	CALC.Write_SimuRst_Target_Meas_Real_Curr_Force(fname_TrapRst);
+
+	CALC.Simu_Finalize(); //delete pointers
 	//#################################
 	//****** (end) Tracking Only ******
 	//#################################

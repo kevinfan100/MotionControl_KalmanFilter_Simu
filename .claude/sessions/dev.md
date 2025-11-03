@@ -4,6 +4,48 @@
 
 ---
 
+## 2025-11-03 08:48
+
+### 摘要
+- 重構 C++ Ramp Tracking 主程式，參數設定更清晰易改
+- 修復模擬中測量噪聲和控制力被禁用的問題
+- 實現自動化輸出檔名生成（格式：`TRACKING_Ramp_{Range}um_{Speed}ums_{Angle}deg_WTR_THEO_P{Kp}_I{Ki}_D{Kd}_日期.txt`）
+- 生成 5 組不同速度和角度的測試數據
+- 建立 Ramp Tracking 數據分析 MATLAB 腳本框架
+
+### 修改的檔案
+**修改**:
+- `jul3_2014_motioncontrol_hallsensor_akf_ar2/Jul3_2014_MotionControl_HallSensor_AKF_AR2.cpp` - 重構主程式
+- `jul3_2014_motioncontrol_hallsensor_akf_ar2/CALCULATION.cpp` - 修復測量噪聲和控制力問題
+- `.claude/settings.local.json` - 更新設定
+- `.vscode/settings.json` - IDE 設定
+
+**新增數據檔案**:
+- `TRACKING_Ramp_40um_10ums_0deg_P35_I0_D0_20251102.txt`
+- `TRACKING_Ramp_40um_20ums_0deg_P35_I0_D0_20251102.txt`
+- `TRACKING_Ramp_40um_100ums_0deg_P35_I0_D0_20251102.txt`
+- `TRACKING_Ramp_40um_100ums_45deg_P35_I0_D0_20251102.txt`
+- `TRACKING_Ramp_40um_200ums_45deg_P35_I0_D0_20251102.txt`
+
+**新增目錄**:
+- `matlab_analysis/tracking_ramp/` - MATLAB 分析腳本目錄
+
+### Commit
+`[待填入]`
+
+### 解決的問題
+- ✅ 整理 Ramp Tracking 參數設定為統一區塊
+- ✅ 修復測量噪聲被註解導致無真實噪聲的問題
+- ✅ 修復控制力被固定為 1.0 的問題
+- ✅ 建立 Ramp Tracking 數據分析框架
+
+### 下一步
+- 深入分析不同速度下的追蹤性能
+- 研究相位分析方法（加速/等速/減速階段）
+- 測試 D 控制對高速追蹤的改善效果
+
+---
+
 ## 2025-10-31 20:30
 
 ### 摘要

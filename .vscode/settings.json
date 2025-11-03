@@ -29,6 +29,7 @@
   "files.associations": {
 	"*.h": "cpp",
 	"*.cpp": "cpp",
-	"iostream": "cpp"
+	"iostream": "cpp",
+	"cmath": "cpp"
 }
 }

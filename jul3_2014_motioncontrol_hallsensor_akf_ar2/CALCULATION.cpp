@@ -1426,12 +1426,12 @@ void CALCULATION::Tracking_Simu( int THEO_or_REAL )
 			cout<<((double)(PosCtrl_Counter))/LEN_Simu_Meas*100<<" %"<<endl;
 		}
 
-		//Simu_MX_umOm[Index] = Simu_RX_umOm[Index] + MeasNoise_X_mOm_RD[Index]*m2um;  //m2um = 10^-6
-		//Simu_MY_umOm[Index] = Simu_RY_umOm[Index] + MeasNoise_Y_mOm_RD[Index]*m2um;
-		//Simu_MZ_umOm[Index] = Simu_RZ_umOm[Index] + MeasNoise_Z_mOm_RD[Index]*m2um;  //Measurement in Om (With Delay & meas. noise)
-		Simu_MX_umOm[Index] = 0.0;  //m2um = 10^-6
-		Simu_MY_umOm[Index] = 0.0;
-		Simu_MZ_umOm[Index] = 0.0;  //Measurement in Om (With Delay & meas. noise)
+		Simu_MX_umOm[Index] = Simu_RX_umOm[Index] + MeasNoise_X_mOm_RD[Index]*m2um;  //m2um = 10^-6
+		Simu_MY_umOm[Index] = Simu_RY_umOm[Index] + MeasNoise_Y_mOm_RD[Index]*m2um;
+		Simu_MZ_umOm[Index] = Simu_RZ_umOm[Index] + MeasNoise_Z_mOm_RD[Index]*m2um;  //Measurement in Om (With Delay & meas. noise)
+		//Simu_MX_umOm[Index] = 0.0;  //m2um = 10^-6
+		//Simu_MY_umOm[Index] = 0.0;
+		//Simu_MZ_umOm[Index] = 0.0;  //Measurement in Om (With Delay & meas. noise)
 		CoordTrans_Elem_m2a( Simu_MX_umOm[Index], Simu_MY_umOm[Index], Simu_MZ_umOm[Index],  
 			                &Simu_MX_umOa[Index],&Simu_MY_umOa[Index],&Simu_MZ_umOa[Index] ); //Measurement in Om -> Oa
 
@@ -1445,9 +1445,9 @@ void CALCULATION::Tracking_Simu( int THEO_or_REAL )
 		CoordTrans_Vect_m2a ( PosMeas_umOm, PosMeas_umOa ); //PosMeas in Om -> Oa
 
 		Calc_Ctrl_Effort_Force ( PID_ctrl ); //(will use ERRpos_umOm[3], return Fd_pNOm, PosCtrl_Counter ++)
-		Fd_pNOm[X] = 1.0;
-		Fd_pNOm[Y] = 1.0;
-		Fd_pNOm[Z] = 1.0;
+		//Fd_pNOm[X] = 1.0;
+		//Fd_pNOm[Y] = 1.0;
+		//Fd_pNOm[Z] = 1.0;
 		CoordTrans_Vect_m2a ( Fd_pNOm, Fd_pNOa );
 
 		Simu_FdX_pNOm[Index] = Fd_pNOm[X];

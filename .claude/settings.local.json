@@ -25,7 +25,10 @@
       "Bash(msbuild:*)",
       "Bash(./Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
       "Bash(../Release/Jul3_2014_MotionControl_HallSensor_AKF_AR2.exe)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(python:*)",
+      "Bash(timeout 20 python:*)",
+      "Bash(python3 -c:*)"
     ],
     "deny": [],
     "ask": []
