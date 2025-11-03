@@ -28,7 +28,8 @@
       "mcp__ide__getDiagnostics",
       "Bash(python:*)",
       "Bash(timeout 20 python:*)",
-      "Bash(python3 -c:*)"
+      "Bash(python3 -c:*)",
+      "SlashCommand(/resume)"
     ],
     "deny": [],
     "ask": []
