@@ -10,7 +10,35 @@
 - `.claude/debug_log.md` - 除錯歷史
 - `.claude/claude_code.json` - 專案元數據
 
-### 2. 檢查 Git 狀態
+### 2. 同步遠端更新
+執行以下指令檢查遠端狀態：
+```bash
+git fetch origin
+git log HEAD..origin/{current_branch} --oneline  # 檢查遠端有無新 commits
+git log origin/{current_branch}..HEAD --oneline  # 檢查本地有無未推送的 commits
+```
+
+**自動分析並提供建議：**
+
+#### 情況 A：遠端有新 commits + 本地有未提交更改
+1. 分析未提交檔案的類型和數量
+2. 提供建議方案（例如：stash → pull → stash pop，或先 commit 再 pull）
+3. 詢問使用者：「發現遠端有 X 個新 commits，本地有 Y 個未提交更改。建議方案：[具體步驟]。是否執行？」
+4. 等待使用者確認後執行
+
+#### 情況 B：遠端有新 commits + 本地乾淨
+1. 列出遠端新 commits 的標題
+2. 詢問使用者：「發現遠端有 X 個新 commits：[列表]。是否執行 git pull？」
+3. 等待使用者確認後執行
+
+#### 情況 C：本地有未推送的 commits
+1. 顯示資訊：「ℹ️ 本地有 X 個未推送的 commits：[列表]」
+2. 不自動 push（push 操作較敏感，由使用者決定）
+
+#### 情況 D：完全同步
+顯示：「✅ 本地與遠端完全同步」
+
+### 3. 檢查 Git 狀態
 執行以下指令並整理資訊：
 ```bash
 git branch --show-current  # 目前分支
@@ -18,7 +46,7 @@ git log -1 --format="%s (%ci)"  # 最後一次 commit
 git status --short  # 未提交的變更
 ```
 
-### 3. 顯示專案狀態（在對話框中）
+### 4. 顯示專案狀態（在對話框中）
 ```
 📋 專案：Motion Control Kalman Filter Simulation
 📂 目前分支：{分支名稱}
@@ -26,7 +54,7 @@ git status --short  # 未提交的變更
 ⚠️  未提交的變更：{數量} 個檔案
 ```
 
-### 4. 讀取最近進度
+### 5. 讀取最近進度
 - 讀取 `.claude/sessions/{目前分支}.md`
 - 顯示**最新的一筆**階段紀錄：
 ```
@@ -34,7 +62,7 @@ git status --short  # 未提交的變更
 {摘要內容}
 ```
 
-### 5. 驗證必要資料檔案
+### 6. 驗證必要資料檔案
 檢查以下檔案是否存在：
 - `KI_10Hz.txt`
 - `InvKIreal.txt`
@@ -50,7 +78,7 @@ git status --short  # 未提交的變更
 ⚠️  熱雜訊資料檔案存在
 ```
 
-### 6. 顯示工作流程規則
+### 7. 顯示工作流程規則
 ```
 📌 開發規則：
 - 修改前一定要先讀 CLAUDE.md
@@ -61,7 +89,7 @@ git status --short  # 未提交的變更
 - 使用 UTF-8 編碼撰寫繁體中文註解
 ```
 
-### 7. 就緒提示
+### 8. 就緒提示
 ```
 ✅ 準備就緒。今天要做什麼？
 ```
