@@ -158,6 +158,17 @@ public:
    //####################################################
 
 
+   //##########################################
+   //****** Hall Sensor Model Parameters ******
+   //##########################################
+   double D_H[6];           // Hall sensor gain: Phi = D_H * V_m
+   double D_H_inv[6];       // Inverse Hall sensor gain: V_m = D_H_inv * Phi
+   double FNor_Hall[3];     // Normalized force from Hall voltage (X, Y, Z)
+   //###############################################
+   //****** (end) Hall Sensor Model Parameters ******
+   //###############################################
+
+
 
    //################################
    //****** For control schem: ******
@@ -377,6 +388,10 @@ public:
 
    void   Calc_FNor_FromSixCurr_KItheo (double Pos_um[3], double Inor_P1toP6[6]);
    void   Calc_FNor_FromSixCurr_KIreal (double Pos_um[3], double Inor_P1toP6[6]);
+
+   // === Hall Sensor Model Functions ===
+   void   Calc_HallVoltage_FromCurrent (double* I_6pole, double* V_m);       // I -> V_m = D_H_inv * K_I * I
+   void   Calc_FNor_FromHallVoltage    (double* Pos_umOa, double* V_m);      // V_m -> F = Phi' * L * Phi
 
    void   OptInvMdl_Curr_FromLS_KItheo (double Fd_pN[3],double Pos_um[3]);
    void   OptInvMdl_Curr_FromLS_KIreal (double Fd_pN[3],double Pos_um[3]);
