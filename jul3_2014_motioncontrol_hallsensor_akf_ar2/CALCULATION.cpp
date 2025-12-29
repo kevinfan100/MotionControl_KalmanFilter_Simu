@@ -222,6 +222,25 @@ CALCULATION::CALCULATION()
    DampGly_X_Oa_RD = NULL;
    DampGly_Y_Oa_RD = NULL;
    DampGly_Z_Oa_RD = NULL;
+
+   // === Initialize Hall Sensor Parameters ===
+   // D_H^-1 values (from experimental calibration)
+   D_H_inv[0] = 2.252;  // Pole 1
+   D_H_inv[1] = 2.749;  // Pole 2
+   D_H_inv[2] = 2.246;  // Pole 3
+   D_H_inv[3] = 2.294;  // Pole 4
+   D_H_inv[4] = 2.832;  // Pole 5
+   D_H_inv[5] = 2.295;  // Pole 6
+
+   // D_H = 1 / D_H^-1
+   for (int i = 0; i < 6; i++) {
+       D_H[i] = 1.0 / D_H_inv[i];
+   }
+
+   // Initialize FNor_Hall
+   FNor_Hall[X] = 0.0;
+   FNor_Hall[Y] = 0.0;
+   FNor_Hall[Z] = 0.0;
 }
 //constrctor ends here
 
@@ -1973,11 +1992,57 @@ void CALCULATION::Calc_FNor_FromSixCurr_KItheo(double Pos_umOa[3], double Inor_P
 void CALCULATION::Calc_FNor_FromSixCurr_KIreal(double Pos_umOa[3], double Inor_P1toP6[6])
 {
 	Calc_Nxyz_KIreal(Pos_umOa); //Obtained: Nx_KIreal & Ny_KIreal & Nz_KIreal
-	
+
     FNor_Curr_KIreal[0] = CalcMat_1x6_6x6_6x1(Inor_P1toP6, Nx_KIreal, Inor_P1toP6);
     FNor_Curr_KIreal[1] = CalcMat_1x6_6x6_6x1(Inor_P1toP6, Ny_KIreal, Inor_P1toP6);
     FNor_Curr_KIreal[2] = CalcMat_1x6_6x6_6x1(Inor_P1toP6, Nz_KIreal, Inor_P1toP6);   //normalized (*ki_head becomes pN)
 }
+
+
+//=====================================================
+// Hall Sensor-based Force Model Functions
+//=====================================================
+
+void CALCULATION::Calc_HallVoltage_FromCurrent(double* I_6pole, double* V_m)
+{
+    // V_m = D_H^-1 * K_I * I
+    // Step 1: Phi = K_I * I (6x6 matrix * 6x1 vector)
+    double Phi[6];
+    CalcMat_6x6_6x1(KItheo, I_6pole, Phi);
+
+    // Step 2: V_m = D_H^-1 * Phi (diagonal matrix multiplication)
+    for (int i = 0; i < 6; i++) {
+        V_m[i] = D_H_inv[i] * Phi[i];
+    }
+}
+
+
+void CALCULATION::Calc_FNor_FromHallVoltage(double* Pos_umOa, double* V_m)
+{
+    // F = g_I * Phi^T * L(p) * Phi
+    // where Phi = D_H * V_m (K_I cancels out in the derivation)
+
+    // Step 1: Phi = D_H * V_m
+    double Phi[6];
+    for (int i = 0; i < 6; i++) {
+        Phi[i] = D_H[i] * V_m[i];
+    }
+
+    // Step 2: Calculate L matrices (using existing functions)
+    Calc_Pre_L(Pos_umOa);
+    Calc_Lx();
+    Calc_Ly();
+    Calc_Lz();
+
+    // Step 3: F = Phi^T * L * Phi (quadratic form)
+    FNor_Hall[X] = CalcMat_1x6_6x6_6x1(Phi, Lx, Phi);
+    FNor_Hall[Y] = CalcMat_1x6_6x6_6x1(Phi, Ly, Phi);
+    FNor_Hall[Z] = CalcMat_1x6_6x6_6x1(Phi, Lz, Phi);
+}
+
+//=====================================================
+// (end) Hall Sensor-based Force Model Functions
+//=====================================================
 
 
 void CALCULATION::Calc_NextBeadPos (double PosBef_umOa[3], double PosAft_umOa[3], int THEO_or_REAL)  //PosBef,PosAft: in um
